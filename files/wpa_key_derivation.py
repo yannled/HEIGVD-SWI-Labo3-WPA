@@ -45,6 +45,8 @@ Clientmac = "none"
 ANonce = "none"
 SNonce = "none"
 mic_to_test = "none"
+data = "none"
+
 for trame in wpa:
 	if trame.haslayer(Dot11Beacon):
 		ssid = trame.info
@@ -63,6 +65,11 @@ for trame in wpa:
 			print(str(trame.load.encode('hex')))
 			dataLength = len(data)
 			mic_to_test = data[dataLength-36:dataLength-4]
+      data = list(data)
+      for i in range(dataLength-36,dataLength-4):
+        data[i] = "0"
+      data = "0103005f" + ''.join(data)
+      data = a2b_hex(data)
 
 # Important parameters for key derivation - most of them can be obtained from the pcap file
 passPhrase  = "actuelle"
@@ -81,7 +88,7 @@ A           = "Pairwise key expansion" #this string is used in the pseudo-random
 
 B           = min(APmac,Clientmac)+max(APmac,Clientmac)+min(ANonce,SNonce)+max(ANonce,SNonce) #used in pseudo-random function
 
-data        = a2b_hex("0103005f02030a0000000000000000000100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000") 
+#data        = a2b_hex("0103005f02030a0000000000000000000100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000") 
 #cf "Quelques détails importants" dans la donnée
 
 print "\n\nValues used to derivate keys"
